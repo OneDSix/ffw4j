@@ -1,0 +1,20 @@
+group 'net.onedsix.ffw4j'
+version '1.0.0'
+
+dependencies {
+    // File Formats
+    implementation("com.google.code.gson:gson:2.11.0") // Not used for JSON handling
+    api("commons-io:commons-io:2.16.1")
+    implementation("com.googlecode.plist:dd-plist:1.28")
+
+    // Compatibility
+    compileOnly("com.badlogicgames.gdx:gdx:1.12.1") // for FileHandle
+
+    // Utils
+    api("com.github.OneDSix:ratils:5f2c2f8ae4") // Needs Improvement!
+    implementation("org.projectlombok:lombok:$lombokVersion")
+    annotationProcessor("org.projectlombok:lombok:$lombokVersion")
+    compileOnly("org.jetbrains:annotations:23.0.0")
+    implementation("org.slf4j:slf4j-api:1.7.32")
+    implementation("ch.qos.logback:logback-classic:1.2.13")
+}

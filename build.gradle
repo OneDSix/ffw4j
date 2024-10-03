@@ -1,0 +1,35 @@
+group = "net.onedsix.ffw4j"
+version = "1.0.0"
+
+allprojects {
+    apply plugin: "application"
+    apply plugin: "java-library"
+    apply plugin: "java"
+
+    java {
+        targetCompatibility = 8
+        sourceCompatibility = 8
+    }
+
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        mavenLocal()
+        google()
+
+        maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots/") }
+        maven { url = uri("https://oss.sonatype.org/content/repositories/releases/") }
+        maven { url = uri("https://jitpack.io") }
+    }
+
+    dependencies {
+        testImplementation("org.openjdk.jmh:jmh-core:$jmhVersion")
+        testImplementation("org.openjdk.jmh:jmh-generator-annprocess:$jmhVersion")
+        testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
+        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}

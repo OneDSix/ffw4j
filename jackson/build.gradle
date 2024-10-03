@@ -1,0 +1,24 @@
+plugins {
+    id "java"
+    id "java-library"
+}
+
+group 'net.onedsix.ffw4j'
+version '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    api project(":core")
+
+    // Jackson Imports
+    implementation("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
+    implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv:$jacksonVersion")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-properties:$jacksonVersion")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-toml:$jacksonVersion")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonVersion")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonVersion")
+}

@@ -1,0 +1,15 @@
+pluginManagement {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    
+}
+rootProject.name = "file_format_wrapper"
+
+include("core",
+        "jackson", "jackson:toml", "jackson:json",
+        "rejects")
+findProject(':jackson:toml')?.name = 'toml'
+findProject(':jackson:json')?.name = 'json'
+
