@@ -1,16 +1,24 @@
 package net.onedsix.ffw4j.jackson.node;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import net.onedsix.ffw4j.services.container.composition.PrimitiveQueryableFile;
+import net.onedsix.ffw4j.services.container.AbstractContainer;
+import net.onedsix.ffw4j.services.container.composition.QueryableContainer;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Date;
 
-public class JacksonNodeFormat implements PrimitiveQueryableFile {
+public class JacksonNodeFormat extends AbstractContainer implements QueryableContainer {
     
     public final JsonNode node;
     
     public JacksonNodeFormat(JsonNode node) {
         this.node = node;
+    }
+    
+    @Override
+    public String getFileExtension() {
+        return null;
     }
     
     @Override
@@ -24,8 +32,8 @@ public class JacksonNodeFormat implements PrimitiveQueryableFile {
     }
     
     @Override
-    public Date getDate(String query) {
-        return new Date(node.get(query).asText());
+    public Date getDate(String query) throws ParseException {
+        return DateFormat.getInstance().parse(node.get(query).asText());
     }
     
     @Override
@@ -61,5 +69,10 @@ public class JacksonNodeFormat implements PrimitiveQueryableFile {
     @Override
     public String getString(String query) {
         return node.get(query).asText();
+    }
+    
+    @Override
+    public void close() {
+    
     }
 }

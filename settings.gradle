@@ -12,4 +12,5 @@ include("core",
         "rejects")
 findProject(':jackson:toml')?.name = 'toml'
 findProject(':jackson:json')?.name = 'json'
+include 'gdx'
 

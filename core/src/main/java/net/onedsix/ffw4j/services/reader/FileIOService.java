@@ -1,10 +1,11 @@
 package net.onedsix.ffw4j.services.reader;
 
-import net.onedsix.ffw4j.core.entry.AbstractFileEntry;
+import net.onedsix.ffw4j.services.entry.AbstractFileEntry;
+import net.onedsix.ffw4j.services.container.AbstractContainer;
 
 import java.io.*;
 
-public interface FileIOService<T> {
+public interface FileIOService<T extends AbstractContainer> {
     //
     String getFileExtension();
     //

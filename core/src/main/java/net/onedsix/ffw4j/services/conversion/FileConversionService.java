@@ -1,13 +1,17 @@
 package net.onedsix.ffw4j.services.conversion;
 
-import net.onedsix.ffw4j.services.container.AbstractFormatContainer;
+import net.onedsix.ffw4j.services.container.AbstractContainer;
 
-public abstract class FileConversionService<T extends AbstractFormatContainer, C extends AbstractFormatContainer> {
+/**
+ * @param <T> The target type
+ * @param <C> The consumed object
+ * */
+public interface FileConversionService<T extends AbstractContainer, C extends AbstractContainer> {
     //
-    public abstract T convert(C consumes);
+    T convert(C consumes);
     
     //
-    public abstract String targets();
+    String targets();
     //
-    public abstract String consumes();
+    String consumes();
 }

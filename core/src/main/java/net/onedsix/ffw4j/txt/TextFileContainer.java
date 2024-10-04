@@ -1,8 +1,8 @@
 package net.onedsix.ffw4j.txt;
 
-import net.onedsix.ffw4j.services.container.AbstractPlainContainer;
+import net.onedsix.ffw4j.services.container.AbstractContainer;
 
-public class TextFileContainer extends AbstractPlainContainer {
+public class TextFileContainer extends AbstractContainer {
     
     //
     private String content;
@@ -35,7 +35,7 @@ public class TextFileContainer extends AbstractPlainContainer {
     }
     
     //
-    public void commentsMode(TextComments mode) {
+    public void setCommentsMode(TextComments mode) {
         commentsMode = mode;
     }
     //
@@ -43,17 +43,29 @@ public class TextFileContainer extends AbstractPlainContainer {
         return commentsMode instanceof TextComments.NoComments;
     }
     
-    //
-    public int findCount(String phrase) {
-    
+    /** Note that this method returns the line in off-by-one count.
+     * Line 0 is the first line, line 1 is the second, etc.
+     * @see #setLine(int, String) */
+    public String getLine(int lineNum) throws ArrayIndexOutOfBoundsException {
+        String[] split = content.split("\n");
+        return split[lineNum];
     }
-    //
-    public int findFirst(String phrase) {
-    
+    /** Note that this method returns the line in off-by-one count.
+     * Line 0 is the first line, line 1 is the second, etc.
+     * @see #getLine(int)  */
+    public String setLine(int lineNum, String str) throws ArrayIndexOutOfBoundsException {
+        String[] split = content.split("\n");
+        split[lineNum] = str;
+        StringBuilder sb = new StringBuilder(split.length);
+        for (String line : split) {
+            sb.append(line).append("\n");
+        }
+        this.content = sb.toString();
+        return this.content;
     }
     
-    //
-    public String getLine(int number) {
-    
+    @Override
+    public void close() {
+        // Nothing!
     }
 }

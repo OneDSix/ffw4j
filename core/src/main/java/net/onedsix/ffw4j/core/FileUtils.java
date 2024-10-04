@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Stream;
@@ -13,7 +13,7 @@ import java.util.zip.ZipOutputStream;
 
 @Slf4j
 @SuppressWarnings("unused")
-class FileUtils {
+public class FileUtils {
     public static void backupDirectory(File target, File destination) throws IOException {
         // Make sure the destination is a .zip file
         if (!destination.toString().endsWith(".zip")) {
@@ -62,7 +62,7 @@ class FileUtils {
         }
     }
     
-    public static InputStream getResource(String filename) {
-        return FileUtils.class.getClassLoader().getResourceAsStream(filename);
+    public static File getResource(String filename) throws URISyntaxException {
+        return new File(FileUtils.class.getClassLoader().getResource(filename).toURI());
     }
 }

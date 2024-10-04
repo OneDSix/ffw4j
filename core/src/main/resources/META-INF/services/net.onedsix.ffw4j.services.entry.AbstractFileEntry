@@ -1,0 +1,4 @@
+net.onedsix.ffw4j.services.entry.FileFileEntry
+net.onedsix.ffw4j.services.entry.InputStreamEntry
+net.onedsix.ffw4j.services.entry.PathFileEntry
+net.onedsix.ffw4j.services.entry.StringFileEntry

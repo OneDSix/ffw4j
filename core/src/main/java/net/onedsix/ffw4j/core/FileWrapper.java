@@ -1,38 +1,31 @@
 package net.onedsix.ffw4j.core;
 
-import net.onedsix.ffw4j.core.entry.AbstractFileEntry;
-import net.onedsix.ffw4j.core.entry.EntryDispatcher;
-import net.onedsix.ffw4j.services.container.AbstractFormatContainer;
-import org.jetbrains.annotations.ApiStatus;
+import net.onedsix.ffw4j.services.entry.AbstractFileEntry;
+import net.onedsix.ffw4j.services.container.AbstractContainer;
+import net.onedsix.ffw4j.services.reader.CastableFile;
+import net.onedsix.ffw4j.services.reader.FileIOService;
 
-import java.util.function.Function;
+import static net.onedsix.ffw4j.core.FFWServiceLoader.convertToFile;
 
 /** The main class for FFW4J;<br>
- * contains {@link FileWrapper#read(Object)}, {@link FileWrapper#write(Object, AbstractFormatContainer)},<br>
- * and {@link FileWrapper#convert(AbstractFormatContainer, String)}. */
+ * contains {@link FileWrapper#read(Object)}, {@link FileWrapper#write(Object, AbstractContainer)},<br>
+ * and {@link FileWrapper#convert(AbstractContainer, String)}. */
+@SuppressWarnings("unused")
 public class FileWrapper {
-    
-    @ApiStatus.Internal
-    public static AbstractFileEntry<?> convertToFile(Object obj) throws FFWException {
-        Function<Object, AbstractFileEntry<?>> converter = EntryDispatcher.get(obj.getClass());
-        if (converter != null) {
-            return converter.apply(obj);
-        } else {
-            throw new FFWException("This is not a convertible type!");
-        }
-    }
-    
-    public static AbstractFormatContainer read(Object file) throws FFWException {
+    //
+    public static AbstractContainer read(Object file) throws FFWException {
         try {
             AbstractFileEntry<?> entry = convertToFile(file);
             String extension = entry.toExtension();
-            return (AbstractFormatContainer) FFWServiceLoader.formatIOLookup.get(extension).read(entry.toFile());
+            return FFWServiceLoader.formatIOLookup.get(extension).read(entry.toFile());
         } catch (Exception e) {
             throw new FFWException("Issue whilst reading file!", e);
         }
     }
     
-    public static boolean write(Object file, AbstractFormatContainer data) throws FFWException {
+    //
+    @SuppressWarnings("unchecked") // Result of generics being cast, should be fine
+    public static boolean write(Object file, AbstractContainer data) throws FFWException {
         try {
             AbstractFileEntry<?> entry = convertToFile(file);
             String extension = entry.toExtension();
@@ -42,10 +35,39 @@ public class FileWrapper {
         }
     }
     
-    public static <C extends AbstractFormatContainer, T extends AbstractFormatContainer> T
-            convert(C consumes, String to) throws FFWException {
+    //
+    public static <C> C readCast(Object file, Class<C> cast) throws FFWException {
         try {
-            return (T) FFWServiceLoader.formatConversionLookup.get(consumes.getFileExtension(), to).convert(consumes);
+            AbstractFileEntry<?> entry = convertToFile(file);
+            String extension = entry.toExtension();
+            FileIOService<?> ioService = FFWServiceLoader.formatIOLookup.get(extension);
+            if (ioService instanceof CastableFile) return ((CastableFile) ioService).castRead(entry.toFile(), cast);
+            else throw new ClassCastException("Could not cast; "+ioService.getClass().getSimpleName()+" does not implement CastableFile");
+        } catch (Exception e) {
+            throw new FFWException("Issue whilst reading file!", e);
+        }
+    }
+    
+    //
+    public static <C> boolean writeCast(Object file, C data) throws FFWException {
+        try {
+            AbstractFileEntry<?> entry = convertToFile(file);
+            String extension = entry.toExtension();
+            FileIOService<?> ioService = FFWServiceLoader.formatIOLookup.get(extension);
+            if (ioService instanceof CastableFile) return ((CastableFile) ioService).castWrite(entry.toFile(), data);
+            else throw new ClassCastException("Could not cast; "+ioService.getClass().getSimpleName()+" does not implement CastableFile");
+        } catch (Exception e) {
+            throw new FFWException("Issue whilst writing file!", e);
+        }
+    }
+    
+    //
+    @SuppressWarnings("unchecked") // Another result of generics being cast, should be fine
+    public static <C extends AbstractContainer> AbstractContainer convert(
+            C consumes, String to
+    ) throws FFWException {
+        try {
+            return FFWServiceLoader.formatConversionLookup.get(consumes.getFileExtension(), to).convert(consumes);
         } catch (Exception e) {
             throw new FFWException("Issue whilst converting container!", e);
         }
